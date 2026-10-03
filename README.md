@@ -65,27 +65,27 @@ PDF processing with PyPDF
 
 Through this project, I worked with:
 
-LLM integration
-Prompt engineering
-Structured AI outputs
-Retrieval-Augmented Generation (RAG)
-Text chunking
-Embeddings
-Vector databases
-Semantic search
-PDF document processing
-FastAPI
-React
-REST APIs
-Local LLM deployment with Ollama
+1.LLM integration
+2.Prompt engineering
+3.Structured AI outputs
+4.Retrieval-Augmented Generation (RAG)
+5.Text chunking
+6.Embeddings
+7.Vector databases
+8.Semantic search
+9.PDF document processing
+10.FastAPI
+11.React
+12.REST APIs
+13.Local LLM deployment with Ollama
 
 ## Future Improvements -
-User authentication
-Multiple document management
-Chat history
-Better document retrieval
-Streaming AI responses
-Cloud deployment
-Mobile responsive improvements
-Voice-based questions
-Study progress tracking
+1.User authentication
+2.Multiple document management
+3.Chat history
+4.Better document retrieval
+5.Streaming AI responses
+6.Cloud deployment
+7.Mobile responsive improvements
+8.Voice-based questions
+9.Study progress tracking
