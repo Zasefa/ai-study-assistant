@@ -38,53 +38,54 @@ The system:
 6. Sends the retrieved context to the local LLM
 7. Generates an answer based on the PDF
 
-Tech Stack
-Frontend -
+## Tech Stack
+### Frontend -
 React
 Vite
 Axios
 CSS
 
-Backend-
+### Backend-
 Python
 FastAPI
 LangChain
 Pydantic
 
-AI -
+### AI -
 Ollama
 Llama 3.1 8B
 Nomic Embed Text
 
-RAG / Vector Database -
+### RAG / Vector Database -
 ChromaDB
 LangChain Chroma
 PDF processing with PyPDF
 
-Project Structure -
+## What I Learned -
 
-ai-study-assistant/
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── llm.py
-│   │   ├── prompts.py
-│   │   ├── schemas.py
-│   │   ├── mcq_schema.py
-│   │   ├── document_processor.py
-│   │   ├── vector_store.py
-│   │   └── memory.py
-│   │
-│   └── requirements.txt
-│
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   └── main.jsx
-│   │
-│   ├── package.json
-│   └── vite.config.js
-│
-└── README.md
+Through this project, I worked with:
+
+LLM integration
+Prompt engineering
+Structured AI outputs
+Retrieval-Augmented Generation (RAG)
+Text chunking
+Embeddings
+Vector databases
+Semantic search
+PDF document processing
+FastAPI
+React
+REST APIs
+Local LLM deployment with Ollama
+
+## Future Improvements -
+User authentication
+Multiple document management
+Chat history
+Better document retrieval
+Streaming AI responses
+Cloud deployment
+Mobile responsive improvements
+Voice-based questions
+Study progress tracking
