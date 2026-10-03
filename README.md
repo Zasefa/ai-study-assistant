@@ -62,6 +62,7 @@ LangChain Chroma
 PDF processing with PyPDF
 
 Project Structure -
+
 ai-study-assistant/
 │
 ├── backend/
