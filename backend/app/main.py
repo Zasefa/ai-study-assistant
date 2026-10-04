@@ -17,13 +17,22 @@ from app.prompts import (
     mcq_prompt
 )
 
-from app.vector_store import get_retriever
+from app.vector_store import (
+    get_retriever,
+    search_with_scores
+)
+
 from app.document_processor import process_pdf
+
 from app.memory import (
     get_history,
     add_message
 )
 
+
+# ==============================
+# FASTAPI APP
+# ==============================
 
 app = FastAPI(
     title="AI Study Assistant",
@@ -31,35 +40,40 @@ app = FastAPI(
 )
 
 
+# ==============================
+# CORS
+# ==============================
+
 app.add_middleware(
     CORSMiddleware,
-
-   allow_origins=[
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://ai-study-assistant-frontend-mxhd.onrender.com"
-],
-
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://ai-study-assistant-frontend-mxhd.onrender.com"
+    ],
     allow_credentials=True,
-
     allow_methods=["*"],
-
     allow_headers=["*"]
 )
 
 
-# --------------------------------
-# REQUEST MODEL
-# --------------------------------
+# ==============================
+# REQUEST MODELS
+# ==============================
 
 class Question(BaseModel):
-
     question: str
 
 
-# --------------------------------
+class PDFQuestion(BaseModel):
+    question: str
+    document_id: str
+    session_id: str = "student1"
+
+
+# ==============================
 # HOME
-# --------------------------------
+# ==============================
 
 @app.get("/")
 def home():
@@ -69,9 +83,9 @@ def home():
     }
 
 
-# --------------------------------
-# NORMAL AI QUESTION
-# --------------------------------
+# ==============================
+# ASK AI
+# ==============================
 
 @app.post("/ask")
 def ask(data: Question):
@@ -97,7 +111,11 @@ def ask(data: Question):
 
     except Exception as e:
 
-        print("\nASK AI ERROR:", type(e).__name__)
+        print(
+            "\nASK AI ERROR:",
+            type(e).__name__
+        )
+
         print(str(e))
 
         raise HTTPException(
@@ -109,9 +127,9 @@ def ask(data: Question):
         )
 
 
-# --------------------------------
-# MCQ GENERATOR
-# --------------------------------
+# ==============================
+# GENERATE MCQ
+# ==============================
 
 @app.post("/generate-mcq")
 def generate_mcq(data: Question):
@@ -134,7 +152,11 @@ def generate_mcq(data: Question):
 
     except Exception as e:
 
-        print("\nMCQ ERROR:", type(e).__name__)
+        print(
+            "\nMCQ ERROR:",
+            type(e).__name__
+        )
+
         print(str(e))
 
         raise HTTPException(
@@ -146,14 +168,12 @@ def generate_mcq(data: Question):
         )
 
 
-# --------------------------------
-# PDF UPLOAD
-# --------------------------------
+# ==============================
+# UPLOAD PDF
+# ==============================
 
 @app.post("/upload-pdf")
-async def upload_pdf(
-    file: UploadFile = File(...)
-):
+async def upload_pdf(file: UploadFile = File(...)):
 
     try:
 
@@ -211,7 +231,6 @@ async def upload_pdf(
         print("PDF SUCCESS")
 
         return {
-
             "message":
                 "PDF uploaded and processed successfully.",
 
@@ -234,7 +253,11 @@ async def upload_pdf(
 
     except Exception as e:
 
-        print("\nPDF ERROR:", type(e).__name__)
+        print(
+            "\nPDF ERROR:",
+            type(e).__name__
+        )
+
         print(str(e))
 
         raise HTTPException(
@@ -246,16 +269,9 @@ async def upload_pdf(
         )
 
 
-# --------------------------------
+# ==============================
 # ASK PDF
-# --------------------------------
-
-class PDFQuestion(BaseModel):
-
-    question: str
-    document_id: str
-    session_id: str = "student1"
-
+# ==============================
 
 @app.post("/ask-pdf")
 def ask_pdf(data: PDFQuestion):
@@ -267,36 +283,121 @@ def ask_pdf(data: PDFQuestion):
         print("DOCUMENT:", data.document_id)
         print("==============================")
 
+
+        # ==============================
+        # CONVERSATION HISTORY
+        # ==============================
+
         history_data = get_history(
             data.session_id
         )
 
         history = "\n".join(
-
             f"User: {item['question']}\n"
             f"Assistant: {item['answer']}"
-
             for item in history_data
         )
 
-        retriever = get_retriever(
-            k=3,
+
+        # ==============================
+        # ADAPTIVE RETRIEVAL
+        # ==============================
+
+        broad_keywords = [
+            "main topic",
+            "overview",
+            "summary",
+            "summarize",
+            "whole document",
+            "entire document",
+            "document about",
+            "main features",
+            "key points",
+            "explain the project",
+            "project overview",
+            "overall"
+        ]
+
+        question_lower = data.question.lower()
+
+        is_broad_question = any(
+            keyword in question_lower
+            for keyword in broad_keywords
+        )
+
+
+        if is_broad_question:
+
+            retrieval_k = 8
+
+            print(
+                "Broad question detected → "
+                "retrieving 8 chunks"
+            )
+
+        else:
+
+            retrieval_k = 3
+
+            print(
+                "Specific question detected → "
+                "retrieving 3 chunks"
+            )
+
+
+        # ==============================
+        # SEARCH WITH SIMILARITY SCORES
+        # ==============================
+
+        results = search_with_scores(
+            query=data.question,
+            k=retrieval_k,
             document_id=data.document_id
         )
 
-        documents = retriever.invoke(
-            data.question
-        )
 
         print(
             "Retrieved documents:",
-            len(documents)
+            len(results)
         )
 
-        if not documents:
+
+        # ==============================
+        # SHOW SCORES
+        # ==============================
+
+        for i, (document, score) in enumerate(results):
+
+            print(
+                f"\n--- Retrieved Chunk {i + 1} ---"
+            )
+
+            print(
+                "Similarity score:",
+                score
+            )
+
+            print(
+                "Page:",
+                document.metadata.get("page")
+            )
+
+            print(
+                "Content:"
+            )
+
+            print(
+                document.page_content
+            )
+
+
+        # ==============================
+        # NO RESULTS
+        # ==============================
+
+        if not results:
 
             return {
-
                 "question":
                     data.question,
 
@@ -304,15 +405,79 @@ def ask_pdf(data: PDFQuestion):
                     "I could not find this information "
                     "in the provided document.",
 
-                "sources": []
+                "sources":
+                    []
             }
 
+
+        # ==============================
+        # RELEVANCE CHECK
+        # ==============================
+
+        # Chroma distance:
+        # Lower score = more similar
+        #
+        # We use a conservative threshold
+        # for this first test.
+
+        relevance_threshold = 1.0
+
+        relevant_results = [
+            (document, score)
+            for document, score in results
+            if score <= relevance_threshold
+        ]
+
+
+        print(
+            "\nRelevant documents:",
+            len(relevant_results)
+        )
+
+
+        # ==============================
+        # NO RELEVANT INFORMATION
+        # ==============================
+
+        if not relevant_results:
+
+            print(
+                "No sufficiently relevant chunks found."
+            )
+
+            return {
+                "question":
+                    data.question,
+
+                "answer":
+                    "I could not find this information "
+                    "in the provided document.",
+
+                "sources":
+                    []
+            }
+
+
+        # ==============================
+        # CREATE CONTEXT
+        # ==============================
+
+        documents = [
+            document
+            for document, score
+            in relevant_results
+        ]
+
+
         context = "\n\n".join(
-
             document.page_content
-
             for document in documents
         )
+
+
+        # ==============================
+        # RAG PROMPT
+        # ==============================
 
         prompt = f"""
 You are an AI Study Assistant.
@@ -337,7 +502,7 @@ Rules:
 - Use only the provided document context.
 - Do not use outside knowledge.
 - Do not invent information.
-- If the answer is not present, say:
+- If the answer is not present in the context, say:
 
 "I could not find this information in
 the provided document."
@@ -345,13 +510,30 @@ the provided document."
 Give a clear and beginner-friendly answer.
 """
 
-        answer = generate_text(prompt)
+
+        # ==============================
+        # GENERATE ANSWER
+        # ==============================
+
+        answer = generate_text(
+            prompt
+        )
+
+
+        # ==============================
+        # SAVE CONVERSATION
+        # ==============================
 
         add_message(
             data.session_id,
             data.question,
             answer
         )
+
+
+        # ==============================
+        # CREATE SOURCES
+        # ==============================
 
         sources = []
 
@@ -369,6 +551,11 @@ Give a clear and beginner-friendly answer.
                     }
                 )
 
+
+        # ==============================
+        # REMOVE DUPLICATE PAGES
+        # ==============================
+
         unique_sources = []
 
         seen_pages = set()
@@ -383,12 +570,19 @@ Give a clear and beginner-friendly answer.
                     source
                 )
 
-                seen_pages.add(page)
+                seen_pages.add(
+                    page
+                )
+
 
         print("ASK PDF SUCCESS")
 
-        return {
 
+        # ==============================
+        # RETURN RESPONSE
+        # ==============================
+
+        return {
             "question":
                 data.question,
 
@@ -404,6 +598,7 @@ Give a clear and beginner-friendly answer.
             "sources":
                 unique_sources
         }
+
 
     except Exception as e:
 
