@@ -1,12 +1,18 @@
-from langchain_ollama import ChatOllama
+import os
+from dotenv import load_dotenv
+
+from langchain_openai import ChatOpenAI
 
 from app.schemas import StudyAnswer
 from app.mcq_schema import MCQResponse
 
+load_dotenv()
 
-model = ChatOllama(
-    model="llama3.1:8b",
-    temperature=0.7
+model = ChatOpenAI(
+    model="openai/gpt-oss-20b",
+    temperature=0.7,
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
 )
 
 
