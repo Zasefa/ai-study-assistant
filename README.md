@@ -110,31 +110,35 @@ AI Generated Answer
 ### Tech Stack
 
 ## Frontend
-React
-Vite
-Axios
-CSS
+-React
+-Vite
+-Axios
+-CSS
+
 ## Backend
-Python
-FastAPI
-Pydantic
-LangChain
-REST APIs
+-Python
+-FastAPI
+-Pydantic
+-LangChain
+-REST APIs
+
 ## Generative AI
-Groq API
-openai/gpt-oss-20b
-Structured AI outputs
-Prompt engineering
+-Groq API
+-openai/gpt-oss-20b
+--Structured AI outputs
+-Prompt engineering
+
 ## RAG / Vector Database
-Retrieval-Augmented Generation (RAG)
-ChromaDB
-LangChain Chroma
-PDF processing
-Embeddings
-Semantic search
+-Retrieval-Augmented Generation (RAG)
+-ChromaDB
+-LangChain Chroma
+-PDF processing
+-Embeddings
+-Semantic search
+
 ## Deployment
-Render
-GitHub
+-Render
+-GitHub
 
 
 ### How the Application Works
@@ -234,8 +238,8 @@ ai-study-assistant/
 
 ## 1. Clone the Repository
 
-git clone https://github.com/Zasefa/ai-study-assistant.git
-cd ai-study-assistant
+-git clone https://github.com/Zasefa/ai-study-assistant.git
+-cd ai-study-assistant
 
 ## 2. Backend Setup
 
@@ -267,10 +271,10 @@ http://127.0.0.1:8000/docs
 
 ## 5. Start the Frontend
 
-Open another terminal:
-cd frontend
-npm install
-npm run dev
+-Open another terminal:
+-cd frontend
+-npm install
+-npm run dev
 
 
 ###  Deployment
@@ -311,24 +315,24 @@ LLM Response
 
 This project helped me understand and implement:
 
-Large Language Models (LLMs)
-Generative AI
-Prompt Engineering
-Structured AI Outputs
-Retrieval-Augmented Generation (RAG)
-Text Chunking
-Embeddings
-Vector Databases
-Semantic Search
-PDF Document Processing
-LangChain
-FastAPI
-REST APIs
-React
-API Integration
-Environment Variables
-Git & GitHub
-Cloud Deployment
+-Large Language Models (LLMs)
+-Generative AI
+-Prompt Engineering
+-Structured AI Outputs
+-Retrieval-Augmented Generation (RAG)
+-Text Chunking
+-Embeddings
+-Vector Databases
+-Semantic Search
+-PDF Document Processing
+-LangChain
+-FastAPI
+-REST APIs
+-React
+-API Integration
+-Environment Variables
+-Git & GitHub
+-Cloud Deployment
 
 
 
@@ -338,35 +342,35 @@ Cloud Deployment
 Through this project, I learned how an AI-powered application works from frontend to backend and AI model integration.
 The major things I practiced were:
 
-Connecting a React frontend with a FastAPI backend
-Working with LLM APIs
-Designing prompts for consistent AI responses
-Generating structured AI outputs
-Building a basic RAG pipeline
-Processing PDF documents
-Creating and querying vector databases
-Using LangChain components
-Building REST APIs with FastAPI
-Connecting frontend and backend APIs
-Managing environment variables
-Deploying a full-stack AI application
-Debugging CORS and deployment issues
+-Connecting a React frontend with a FastAPI backend
+-Working with LLM APIs
+-Designing prompts for consistent AI responses
+-Generating structured AI outputs
+-Building a basic RAG pipeline
+-Processing PDF documents
+-Creating and querying vector databases
+-Using LangChain components
+-Building REST APIs with FastAPI
+-Connecting frontend and backend APIs
+-Managing environment variables
+-Deploying a full-stack AI application
+-Debugging CORS and deployment issues
 
 
 ### Future Improvements
 
 Some improvements planned for future versions:
 
-User authentication
-Multiple PDF/document management
-Chat history
-Improved RAG retrieval
-Streaming AI responses
-Conversation-based study sessions
-Study progress tracking
-Better mobile responsiveness
-Voice-based questions
-Personalized learning recommendations
+-User authentication
+-Multiple PDF/document management
+-Chat history
+-Improved RAG retrieval
+-Streaming AI responses
+-Conversation-based study sessions
+-Study progress tracking
+-Better mobile responsiveness
+-Voice-based questions
+-Personalized learning recommendations
 
 
 ### Author
